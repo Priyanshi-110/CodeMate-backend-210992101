@@ -1,0 +1,19 @@
+{
+  "name": "codemate",
+  "version": "1.0.0",
+  "description": "CodeMate aims to solve this problem by providing a real-time collaborative coding environment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Raghwendra05/CodeMate-backend-210992101.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Raghwendra05/CodeMate-backend-210992101/issues"
+  },
+  "homepage": "https://github.com/Raghwendra05/CodeMate-backend-210992101#readme"
+}
