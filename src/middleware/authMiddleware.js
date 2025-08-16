@@ -1,4 +1,5 @@
 // src/middleware/authMiddleware.js
+// authmiddleware.js
 const jwt = require("jsonwebtoken");
 const { PrismaClient } = require('@prisma/client'); // Import Prisma Client
 const prisma = new PrismaClient(); // Initialize Prisma Client
