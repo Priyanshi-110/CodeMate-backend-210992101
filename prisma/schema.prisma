@@ -1,0 +1,39 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String? // The '?' makes this optional
+  emailId   String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  // This creates a one-to-one link between a User and a Profile
+  profile   Profile?
+}
+
+model Profile {
+  id              String   @id @default(cuid())
+  profileImg      String
+  experience      String
+  githubProfile   String
+  linkedinProfile String
+  codingPlatform  String
+  skills          String
+  location        String
+  achievements    String
+  createdAt       DateTime @default(now())
+
+  // This is the other side of the link to the User
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String @unique // This ensures a user can only have one profile
+}
