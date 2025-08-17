@@ -1,10 +1,10 @@
 // src/index.js
+const executeRoutes = require('./src/routes/executeRoutes.js');
 require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const { Server } = require("socket.io");
 const cors = require('cors');
-
 const app = express();
 const server = http.createServer(app); // Create an HTTP server from the Express app
 
@@ -17,9 +17,9 @@ const io = new Server(server, {
 });
 
 // Import API routes
-const userRoutes = require('./routes/userRoutes');
-const profileRoutes = require('./routes/profileRoutes');
-const roomRoutes = require('./routes/roomRoutes');
+const userRoutes = require('./src/routes/userRoutes.js');
+const profileRoutes = require('./src/routes/profileRoutes.js');
+const roomRoutes = require('./src/routes/roomRoutes.js');
 
 const PORT = process.env.PORT || 3000;
 
@@ -31,6 +31,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/rooms', roomRoutes);
+app.use('/api/execute', executeRoutes);
 
 // --- This section handles all real-time logic ---
 io.on('connection', (socket) => {
