@@ -1,39 +1,50 @@
 // src/middleware/authMiddleware.js
-// authmiddleware.js
 const jwt = require("jsonwebtoken");
-const { PrismaClient } = require('@prisma/client'); // Import Prisma Client
-const prisma = new PrismaClient(); // Initialize Prisma Client
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 const authMiddleware = async (req, res, next) => {
+    // 1. Get the token from the request headers
+    const { authorization } = req.headers;
+
+    // 2. Check if the token exists and is in the correct format ("Bearer <token>")
+    if (!authorization || !authorization.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "Authorization failed: No token provided or invalid format." });
+    }
+
+    const token = authorization.split(" ")[1];
+
     try {
-        const { authorization } = req.headers;
-        if (!authorization || !authorization.startsWith("Bearer ")) {
-            return res.status(401).json({ message: "Authorization failed: No token provided." });
-        }
+        // 3. Verify the token using the secret key
+        // Note: Ensure your .env file variable name matches 'JWT_SECRET'
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        const token = authorization.split(" ")[1];
-
-        // Verify the token
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
-
-        // Find the user in the database using Prisma
+        // 4. Find the user from the database using the ID from the token's payload
+        // Note: This assumes your generateToken function signs a payload like { id: user.id }
         const user = await prisma.user.findUnique({
             where: {
-                id: decodedToken.userId 
+                id: decoded.id 
             }
         });
 
+        // 5. If no user is found with that ID, the token is invalid
         if (!user) {
-            return res.status(404).json({ message: "User not found." });
+            return res.status(401).json({ message: "Authorization failed: User not found." });
         }
         
-        // Attach the user object to the request
+        // 6. IMPORTANT: Remove the password from the user object for security
+        delete user.password;
+
+        // 7. Attach the user object (without the password) to the request
         req.user = user;
 
+        // 8. Pass control to the next middleware or controller
         next();
 
     } catch (error) {
-        res.status(401).json({ message: "Authorization failed: Invalid token." });
+        // This block will catch errors from jwt.verify (e.g., expired token, invalid signature)
+        console.error("Authentication Error:", error.message);
+        return res.status(401).json({ message: "Authorization failed: Invalid or expired token." });
     }
 };
 

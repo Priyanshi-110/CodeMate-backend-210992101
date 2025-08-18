@@ -4,6 +4,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require("socket.io");
 const cors = require('cors');
+const executeRoutes = require('./routes/executeRoutes.js');
 
 const app = express();
 const server = http.createServer(app); // Create an HTTP server from the Express app
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/rooms', roomRoutes);
+app.use('/api/execute', executeRoutes);
 
 // --- This section handles all real-time logic ---
 io.on('connection', (socket) => {

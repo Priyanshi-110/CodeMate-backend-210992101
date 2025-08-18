@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Raghwendra05/CodeMate-backend-210992101#readme",
   "dependencies": {
     "@prisma/client": "^6.14.0",
+    "axios": "^1.11.0",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
